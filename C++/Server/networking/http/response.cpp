@@ -10,7 +10,8 @@ network::HTTPResponse::HTTPResponse(
     std::string _last_modified,
     std::string _accept_ranges,
     std::string _X_Frame_Options,
-    std::string _content_encoding)
+    std::string _content_encoding,
+    std::string _connection)
 {
     status_code = _status_code;
     status_message = _status_message;
@@ -22,31 +23,54 @@ network::HTTPResponse::HTTPResponse(
     accept_ranges = _accept_ranges;
     X_Frame_Options = _X_Frame_Options;
     content_encoding = _content_encoding;
+    connection = _connection;
 }
 
-char *network::HTTPResponse::SendHTMLFileAsResponse(std::string filename)
+std::string network::HTTPResponse::SendHTMLFileAsResponse(std::string filename)
 {
+    std::ifstream ifs(filename);
+    std::string file_content(std::istreambuf_iterator<char>{ifs}, {});
+    content_length = file_content.length();
+    set_response(file_content);
+    return make_http_response();
 }
 
-char *network::HTTPResponse::SentTextResponse(std::string text)
+std::string network::HTTPResponse::SentTextResponse(std::string text)
 {
     content_length = (int)text.length();
-    response = text;
-    return make_http_request();
+    set_response(text);
+    return make_http_response();
 }
 
-char *network::HTTPResponse::make_http_request()
+std::string printObject(std::string key, std::string val)
+{
+    return key + ": " + val;
+}
+
+std::string printObject(std::string key, int val)
+{
+    return key + ": " + std::to_string(val);
+}
+
+std::string network::HTTPResponse::make_http_response()
 {
     std::string resp = "";
-    resp += merger(protocol,status_code,status_message);
-    std::cout<<resp<<"\n";
+    resp += merger(protocol, status_code, status_message);
+    resp += merger(printObject("Date", date));
+    resp += merger(printObject("Server", server));
+    resp += merger(printObject("Last-Modified", last_modified));
+    resp += merger(printObject("Content-Type", content_type));
+    resp += merger(printObject("Content-Length", content_length));
+    resp += merger(printObject("Accept-Ranges", accept_ranges));
+    resp += merger(printObject("Connection", connection));
+    resp += "\n";
+    resp += response;
+    return resp.c_str();
 }
-
-
 
 std::string network::HTTPResponse::merger()
 {
-    return "\r\n";
+    return "\n";
 }
 
 std::string network::HTTPResponse::to_string(int x)
@@ -59,9 +83,32 @@ std::string network::HTTPResponse::to_string(std::string s)
     return s;
 }
 
-
-template<typename T,typename... Args>
+template <typename T, typename... Args>
 std::string network::HTTPResponse::merger(T t, Args... args)
 {
     return to_string(t) + " " + merger(args...);
+}
+
+// getters
+
+std::string network::HTTPResponse::get_response()
+{
+    return response;
+}
+
+int network::HTTPResponse::get_status_code()
+{
+    return status_code;
+}
+
+// setters
+
+void network::HTTPResponse::set_response(std::string resp)
+{
+    response = resp;
+}
+
+void network::HTTPResponse::set_status_code(int s_code)
+{
+    status_code = s_code;
 }

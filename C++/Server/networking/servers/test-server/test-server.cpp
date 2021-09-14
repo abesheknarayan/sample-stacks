@@ -24,20 +24,7 @@ void network::TestServer::handler()
 }
 
 void network::TestServer::responder()
-{
-    // char *response = "Hello from Abeshek server";
-    // std::string resp = "HTTP/1.1 200 OK\n"
-    // "Date: Thu, 19 Feb 2009 12:27:04 GMT\n"
-    // "Server: Apache/2.2.3\n"
-    // "Last-Modified: Wed, 18 Jun 2003 16:05:58 GMT\n"
-    // "ETag: \"56d-9989200-1132c580\"\n"
-    // "Content-Type: text/html\n"
-    // "Content-Length: 15\n"
-    // "Accept-Ranges: bytes\n"
-    // "Connection: close\n"
-    // "\n"
-    // "Hello from Abeshek's C++ Server";
-    
+{   
     // have a HTTPResponse object
     network::HTTPResponse new_response(
         int(200),
@@ -45,16 +32,21 @@ void network::TestServer::responder()
         std::string("HTTP/1.1"),
         std::string("text/html"),
         std::string("Abeshek's C++ server"),
-        std::string("Sat Sep 11 2021 13:50:25 GMT+0530 (India Standard Time)"),
-        std::string("Sat May 4 2020 13:50:25 GMT+0530 (India Standard Time)"),
+        std::string("Wed, 18 Jun 2009 16:05:58 GMT"),
+        std::string("Wed, 18 Jun 2003 16:05:58 GMT"),
         std::string("bytes"),
         std::string("SAMEORIGIN"),
-        std::string("gzip")
+        std::string("gzip"),
+        std::string("close")
     );
 
-    // char *resp = new_response.SentTextResponse(std::string("Hello from Abeshek server built with c++ from scratch")); 
+    // getting a string rather than const char * because returning a pointer from a function leads to null pointer as pointer will be erased after function is executed
+    // std::string response = new_response.SentTextResponse(std::string("Hello from Abeshek custom built c++ server"));
 
-    // write(new_socket, response, strlen(response));
+    std::string response = new_response.SendHTMLFileAsResponse("../../Frontend/html/index.html"); 
+
+
+    write(new_socket, response.c_str(), strlen(response.c_str()));
 }
 
 void network::TestServer::launch()
