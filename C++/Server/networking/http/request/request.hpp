@@ -34,6 +34,8 @@ namespace network
         std::string get_request_type();
         std::string get_request_route();
         std::string get_protocol();
+
+        
     };
 }
 

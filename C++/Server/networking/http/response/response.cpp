@@ -1,32 +1,8 @@
 #include "response.hpp"
 
-network::HTTPResponse::HTTPResponse(
-    int _status_code,
-    std::string _status_message,
-    std::string _protocol,
-    std::string _content_type,
-    std::string _server,
-    std::string _date,
-    std::string _last_modified,
-    std::string _accept_ranges,
-    std::string _X_Frame_Options,
-    std::string _content_encoding,
-    std::string _connection)
-{
-    status_code = _status_code;
-    status_message = _status_message;
-    protocol = _protocol;
-    content_type = _content_type;
-    server = _server;
-    date = _date;
-    last_modified = _last_modified;
-    accept_ranges = _accept_ranges;
-    X_Frame_Options = _X_Frame_Options;
-    content_encoding = _content_encoding;
-    connection = _connection;
-}
+network::HTTPResponse::HTTPResponse() {}
 
-std::string network::HTTPResponse::SendHTMLFileAsResponse(std::string filename)
+std::string network::HTTPResponse::SendFileAsResponse(std::string filename)
 {
     std::ifstream ifs(filename);
     std::string file_content(std::istreambuf_iterator<char>{ifs}, {});
@@ -35,7 +11,7 @@ std::string network::HTTPResponse::SendHTMLFileAsResponse(std::string filename)
     return make_http_response();
 }
 
-std::string network::HTTPResponse::SentTextResponse(std::string text)
+std::string network::HTTPResponse::SendTextResponse(std::string text)
 {
     content_length = (int)text.length();
     set_response(text);
@@ -56,8 +32,8 @@ std::string network::HTTPResponse::make_http_response()
 {
     std::string resp = "";
     resp += merger(protocol, status_code, status_message);
-    resp += merger(printObject("Date", date));
-    resp += merger(printObject("Server", server));
+    resp += merger(printObject("Date", response_time));
+    resp += merger(printObject("Server", server_name));
     resp += merger(printObject("Last-Modified", last_modified));
     resp += merger(printObject("Content-Type", content_type));
     resp += merger(printObject("Content-Length", content_length));
@@ -101,6 +77,11 @@ int network::HTTPResponse::get_status_code()
     return status_code;
 }
 
+std::string network::HTTPResponse::get_status_message()
+{
+    return status_message;
+}
+
 // setters
 
 void network::HTTPResponse::set_response(std::string resp)
@@ -112,3 +93,61 @@ void network::HTTPResponse::set_status_code(int s_code)
 {
     status_code = s_code;
 }
+
+void network::HTTPResponse::set_status_message(std::string _s_message)
+{
+    status_message = _s_message;
+}
+
+void network::HTTPResponse::set_protocol(std::string _protocol)
+{
+    protocol = _protocol;
+}
+
+void network::HTTPResponse::set_content_type(std::string _content_type)
+{
+    content_type = _content_type;
+}
+
+void network::HTTPResponse::set_content_length(int _content_length)
+{
+    content_length = _content_length;
+}
+
+void network::HTTPResponse::set_server_name(std::string _server_name)
+{
+    server_name = _server_name;
+}
+
+void network::HTTPResponse::set_response_time(std::string _response_time)
+{
+    response_time = _response_time;
+}
+
+void network::HTTPResponse::set_last_modified(std::string _last_modified)
+{
+    last_modified = _last_modified;
+}
+
+
+void network::HTTPResponse::set_accept_ranges(std::string _accept_ranges)
+{
+    accept_ranges = _accept_ranges;
+}
+
+void network::HTTPResponse::set_X_Frame_Options(std::string _X_Frame_Options)
+{
+    X_Frame_Options = _X_Frame_Options;
+}
+
+void network::HTTPResponse::set_content_encoding(std::string _content_encoding)
+{
+    content_encoding = _content_encoding;
+}
+
+void network::HTTPResponse::set_connection(std::string _connection)
+{
+    connection = _connection;
+}
+
+

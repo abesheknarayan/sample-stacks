@@ -4,8 +4,9 @@
 #include "../networking/servers/server.hpp"
 #include <unistd.h>
 #include <string.h>
-#include "../../loggers/logger.hpp"
-#include "../../http/request/request.hpp"
+#include "../networking/loggers/logger.hpp"
+#include "../networking/http/request/request.hpp"
+#include "test-router/test-router.hpp"
 namespace network
 {
     class TestServer : public SimpleServer
@@ -18,6 +19,7 @@ namespace network
         void responder();
         network::Logger log;
         network::HTTPRequest request;
+        network::TestRouter router;
 
     public:
         TestServer();

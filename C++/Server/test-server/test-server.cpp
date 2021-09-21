@@ -1,5 +1,5 @@
 #include "test-server.hpp"
-#include "../../http/response/response.hpp"
+#include "../networking/http/response/response.hpp"
 
 network::TestServer::TestServer() : SimpleServer(AF_INET, SOCK_STREAM, 0, 80, INADDR_ANY, 10)
 {
@@ -49,23 +49,19 @@ void network::TestServer::handler()
 void network::TestServer::responder()
 {   
     // have a HTTPResponse object
-    network::HTTPResponse new_response(
-        int(200),
-        std::string("OK"),
-        std::string("HTTP/1.1"),
-        std::string("text/html"),
-        std::string("Abeshek's C++ server"),
-        std::string("Wed, 21 Sep 2021 06:05:58 GMT"),
-        std::string("Wed, 18 Jun 2021 16:05:58 GMT"),
-        std::string("bytes"),
-        std::string("SAMEORIGIN"),
-        std::string("gzip"),
-        std::string("keep-alive")
-    );
+    network::HTTPResponse new_response;
+    new_response.set_protocol("HTTP/1.1");
+    new_response.set_content_type("text/html");
+    new_response.set_server_name("Abeshek's Server");
+    new_response.set_response_time("Wed, 21 Sep 2021 06:05:58 GMT");
+    new_response.set_last_modified("Wed, 21 Sep 2021 06:05:58 GMT");
+    new_response.set_accept_ranges("bytes");
+    new_response.set_X_Frame_Options("SAMEORIGIN");
+    new_response.set_content_encoding("gzip");
+    new_response.set_connection("close");
 
     // getting a string rather than const char * because returning a pointer from a function leads to null pointer as pointer will be erased after function is executed
-    std::string response = new_response.SendHTMLFileAsResponse("./../Frontend/html/index.html"); 
-
+    std::string response = router.routeRequests(&request,&new_response);
 
     write(new_socket, response.c_str(), strlen(response.c_str()));
 }
