@@ -3,9 +3,10 @@
 A Http Server written from scratch in C++ using sockets
 
 ## Features
-- Single Threaded
-- Can send text message
+- Single Threaded 
+- Can send text message / HTML files
 - Accepts get requests
+
 
 ## TODO
 - Routers 

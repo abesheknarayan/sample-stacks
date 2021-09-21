@@ -1,11 +1,11 @@
 #ifndef testserver_hpp
 #define testserver_hpp
 
-#include "../server.hpp"
+#include "../networking/servers/server.hpp"
 #include <unistd.h>
 #include <string.h>
 #include "../../loggers/logger.hpp"
-
+#include "../../http/request/request.hpp"
 namespace network
 {
     class TestServer : public SimpleServer
@@ -17,6 +17,7 @@ namespace network
         void handler();
         void responder();
         network::Logger log;
+        network::HTTPRequest request;
 
     public:
         TestServer();
