@@ -1,0 +1,13 @@
+version: "3"
+services: 
+    server: 
+          container_name: cpp_server_container
+          build: .
+          image: cpp_server
+          volumes:
+              - "logsVolume:/sample-stacks/Server/logs"
+          ports: 
+              - "4100:8000"
+
+volumes: 
+    logsVolume:

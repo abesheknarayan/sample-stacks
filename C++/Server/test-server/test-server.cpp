@@ -1,7 +1,7 @@
 #include "test-server.hpp"
 #include "../networking/http/response/response.hpp"
 
-network::TestServer::TestServer() : SimpleServer(AF_INET, SOCK_STREAM, 0, 80, INADDR_ANY, 10)
+network::TestServer::TestServer() : SimpleServer(AF_INET, SOCK_STREAM, 0, 8000, INADDR_ANY, 10)
 {
     launch();
 }
