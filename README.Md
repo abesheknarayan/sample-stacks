@@ -1,7 +1,7 @@
 # Sample Stacks 
-Some experimentations on writing painful c++ servers for various network protocols.
+Some experimentations on writing c++ servers for various network protocols.
 
 # Protocols
 - HTTP
-- SMTP
-- FTP
+- SMTP (WIP)
+- FTP (WIP)
